@@ -15,6 +15,7 @@ public:
     float *getZBuffer();
     int getWidth()const;
     int getHeight()const;
+    int getChannelNums()const;
     //void setColorBuffer(unsigned char *colorBuffer);
     void clearColorBuffer(vec4 color);
     void swapColorBuffer();

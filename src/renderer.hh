@@ -23,6 +23,7 @@ public:
 
     bool update();
     void render();
+    void save(const std::string& path);
 
 private:
 

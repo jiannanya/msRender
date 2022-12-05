@@ -10,6 +10,8 @@ camera::camera(float fovy, float aspect,vec3 position, vec3 target, vec3 upDir)
     ,m_Target(target)
     ,m_UpDir(upDir)
 {       
+        m_ViewMatrix = getIdentityMatrix();
+        m_ProjectionMatrix = getIdentityMatrix();
         updateViewMatrix();
         updateProjectionMatrix(); 
 };

@@ -32,7 +32,6 @@ framebuffer::~framebuffer() {
     if (m_ColorBuffer2) free(m_ColorBuffer2);
     m_ColorBuffer2 = nullptr;
 
-    if(m_ColorBufferPtr)free(m_ColorBufferPtr);
     m_ColorBufferPtr = nullptr;
 
     if(m_ZBuffer)free(m_ZBuffer);
@@ -48,12 +47,17 @@ float *framebuffer::getZBuffer(){
     return m_ZBuffer;
 }
 
+int framebuffer::getChannelNums()const{
+    return m_Channel;
+}
+
 // void framebuffer::setColorBuffer(unsigned char *colorBuffer) {
 //     clearColorBuffer();
 //     m_ColorBuffer = colorBuffer;
 // };
 
 void framebuffer::clearColorBuffer(vec4 color) {
+    std::cerr<<"clearColorBuffer: "<< color.x<<", "<<color.y<<", "<<color.z<<", "<<color.w<<std::endl;
     UINT index_limit = m_Size * m_Channel;
     for(UINT index=0;index<index_limit;index+=m_Channel){
         m_ColorBufferPtr[index+0] = static_cast<BYTE>(color.x * 255);
@@ -61,6 +65,11 @@ void framebuffer::clearColorBuffer(vec4 color) {
         m_ColorBufferPtr[index+2] = static_cast<BYTE>(color.z * 255);
         m_ColorBufferPtr[index+3] = static_cast<BYTE>(color.w * 255);
     }
+    // m_ColorBufferPtr[100+0] = static_cast<BYTE>(1.0f * 255);
+    // m_ColorBufferPtr[100+1] = static_cast<BYTE>(1.0f * 255);
+    // m_ColorBufferPtr[100+2] = static_cast<BYTE>(1.0f * 255);
+    // m_ColorBufferPtr[100+3] = static_cast<BYTE>(1.0f * 255);
+    
 };
 
 
@@ -102,6 +111,8 @@ void framebuffer::swapColorBuffer(){
 void framebuffer::setPixelColor(unsigned int x, unsigned int y, vec4 color) {
     if(x < 0 || x >= m_Width || y < 0 || y >= m_Height)
         return;
+
+    //std::cerr<<"set pixel color: "<<x<<", "<<y<<": "<< color.x<<", "<<color.y<<", "<<color.z<<", "<<color.w<<std::endl;
     // gamma correction.
     // unsigned char red = static_cast<unsigned char>(255*pow(color.x,1.0/2.2));
     // unsigned char green = static_cast<unsigned char>(255*pow(color.y,1.0/2.2));

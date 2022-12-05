@@ -2,8 +2,6 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 
-#define _AMD64_
-
 #include "include.hh"
 #include "global.hh"
 #include "mesh.hh"
@@ -14,6 +12,7 @@
 #include "renderer.hh"
 #include "texture.hh"
 #include "context.hh"
+#include "math.hh"
 
 int main()
 {
@@ -28,6 +27,8 @@ int main()
 
     msr::Shader_Phong phone_shader = msr::Shader_Phong();
     phone_shader.model = msr::getIdentityMatrix();
+    // phone_shader.view = msr::lookat(cam.getPos(), cam.getTarget(), cam.getTarget());
+    // phone_shader.persp = msr::perspective(msr::FOV_INIT,float(msr::WINDOW_WIDTH) / msr::WINDOW_HEIGHT, 0.1f, 10000.0f);
     phone_shader.view = cam.getViewMatrix();
     phone_shader.persp = cam.getProjectionMatrix();
 
@@ -38,6 +39,8 @@ int main()
     ctx.setMesh(&model);
     ctx.setTexture(&tex);
     ctx.setShader(&phone_shader);
+    ctx.setDrawWireFrame(true);
+    ctx.setClearColor(msr::vec4(0.0f,0.0f,0.0f,1.0f));
 
     msr::renderer render(ctx);
     render.render();
@@ -49,6 +52,6 @@ int main()
 // #if defined(WIN32) || defined(_WIN32)
 // 	system("mspaint out.bmp");
 // #endif
-
+    std::cout<<"end main"<<std::endl;
     return 0;
 }

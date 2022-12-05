@@ -86,13 +86,12 @@ mat4 lookat(vec3 eye, vec3 target, vec3 upd) {
 
 mat4 perspective(float fov, float aspect, float znear, float zfar) {
     float fax = 1.0f / (float)tan(fov * 0.5f);
-    mat4 ret;
+    mat4 ret = getIdentityMatrix();
     ret[0][0] = fax / aspect;
     ret[1][1] = fax;
     ret[2][2] = zfar / (zfar - znear);
-    ret[2][3] = 1.f;
     ret[3][2] = -znear * zfar / (zfar - znear);
-    
+    ret[2][3] = 1.f;
     return ret;
 }
 

@@ -8,7 +8,7 @@ context::context(){
     m_shader = nullptr;
     m_mesh = nullptr;
     m_framebuffer = nullptr;
-    m_isDrawWireFrame =false;
+    m_isDrawWireFrame = false;
     m_rasterizer = new rasterizer();   
 }
 
@@ -54,7 +54,7 @@ void context::setTexture(texture* tex){
     m_texture = tex;
 }
 
-framebuffer* context::getFrameBUffer()const{
+framebuffer* context::getFrameBuffer()const{
     return m_framebuffer;
 }
 
@@ -66,12 +66,12 @@ camera* context::getCamera()const{
     return m_camera;
 }
 
-void context::clearColor(vec4 color){
-
+void context::setClearColor(vec4 color){
+    m_clearColor = color;
 }
 
 bool context::isCtxOk(){
-    return m_window && m_framebuffer && m_camera && m_shader && m_mesh;
+    return  m_window && m_framebuffer && m_camera && m_shader && m_mesh;
 }
 
 void context::setDrawWireFrame(bool flag){
@@ -84,11 +84,13 @@ void context::setDrawWireFrame(bool flag){
 void context::draw(){
 
     if(!isCtxOk()){
-        std::cerr<<"context not ok, drawing notthing";
+        std::cerr<<"context not ok, drawing notthing\n";
         return;
     }
 
-        // render per face
+    m_framebuffer->clearColorBuffer(m_clearColor);
+
+    //render per face
     for(int i = 0; i < m_mesh->faceNum(); ++i) {
         // 1. get face vertexs 
         vec3 originVerts[3];
@@ -131,7 +133,6 @@ void context::draw(){
             m_rasterizer->drawLine(round(viewportPos[0].x), round(viewportPos[0].y), round(viewportPos[1].x), round(viewportPos[1].y), m_frameColor,*m_framebuffer);
             m_rasterizer->drawLine(round(viewportPos[0].x), round(viewportPos[0].y), round(viewportPos[2].x), round(viewportPos[2].y), m_frameColor,*m_framebuffer);
             m_rasterizer->drawLine(round(viewportPos[2].x), round(viewportPos[2].y), round(viewportPos[1].x), round(viewportPos[1].y), m_frameColor,*m_framebuffer);
-            return;
         }else{
             m_rasterizer->drawTriangle(viewportPos[0],viewportPos[1],viewportPos[2],m_frameColor,*m_framebuffer);
         }

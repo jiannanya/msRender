@@ -1,0 +1,16 @@
+{
+    "configurations": [
+    {
+        "name": "vs debug",
+        "type": "cppvsdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/nbuild/msr.exe",
+        "args": [],
+        "stopAtEntry": false,
+        "cwd": "${workspaceRoot}/nbuild",
+        "environment": [],
+        "console": "integratedTerminal",
+        "preLaunchTask": "debug"
+    }
+    ]
+}

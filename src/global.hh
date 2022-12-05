@@ -14,7 +14,7 @@ constexpr int WINDOW_WIDTH = 800;
 constexpr int WINDOW_HEIGHT = 600;
 constexpr float FOV_INIT = 45.0f;
 
-vec3 CAM_POS_INIT = vec3(1, 0, 2);
+vec3 CAM_POS_INIT = vec3(1, 1, 3);
 vec3 CAM_TARGET_INIT = vec3(0,0,0);
 vec3 CAM_UP_INIT = vec3(0,1,0);
 

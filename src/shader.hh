@@ -16,6 +16,9 @@ public:
 class Shader_Phong : public shader
 {
 public:
+    Shader_Phong(){}
+    ~Shader_Phong(){delete diffuseTex;diffuseTex=nullptr;}
+
     mat4 model;
     mat4 view;
     mat4 persp;

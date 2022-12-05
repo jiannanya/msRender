@@ -1,8 +1,6 @@
 #ifndef RASTERIZER_HH
 #define RASTERIZER_HH
 
-#define NOMINMAX
-
 #include "include.hh"
 #include "math.hh"
 #include "framebuffer.hh"

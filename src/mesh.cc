@@ -58,6 +58,7 @@ mesh::mesh(const string& filename) {
     in.close();
     std::cerr << "mesh " << filename << " load finished" << std::endl; 
     std::cerr << "v# " << vertexs.size() << " f# " << facet_vert.size() / 3 << " vt# " << texcoords.size() << " vn# " << normals.size() << std::endl;
+    std::cout <<"mesh face num: "<<faceNum()<<std::endl;
 }
 
 int mesh::faceNum() const {

@@ -1,8 +1,6 @@
 #ifndef CONTEXT_HH
 #define CONTEXT_HH
 
-#define NOMINMAX
-
 #include "include.hh"
 #include "math.hh"
 #include "mesh.hh"
@@ -27,12 +25,12 @@ public:
     void setFrameBuffer(framebuffer* fb);
     void setTexture(texture* tex);
 
-    framebuffer* getFrameBUffer()const;
+    framebuffer* getFrameBuffer()const;
     window* getWindow()const;
     camera* getCamera()const;
 
     
-    void clearColor(vec4 color);
+    void setClearColor(vec4 color);
     void setDrawWireFrame(bool flag);
     void draw();
 
@@ -50,6 +48,7 @@ private:
     bool m_isDrawWireFrame;
     int m_Width, m_Height;
     vec4 m_frameColor = vec4(1.0f,1.0f,1.0f,1.0f);
+    vec4 m_clearColor;
 
 
 
