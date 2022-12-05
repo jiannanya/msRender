@@ -7,7 +7,7 @@ void rasterizer::drawPixel(int x, int y, const vec4& color,framebuffer& fb){
 }
 
 void rasterizer::drawLine(int x1, int y1, int x2, int y2, const vec4& color,framebuffer& fb) {
-    std::cout << "drawLine :(" << x1 << "," << y1 << ") to (" << x2 << "," << y2 << ")" << std::endl;
+    //std::cout << "drawLine :(" << x1 << "," << y1 << ") to (" << x2 << "," << y2 << ")" << std::endl;
 
     bool steep = false;
     // traverse by X or Y

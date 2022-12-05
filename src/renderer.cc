@@ -37,6 +37,14 @@ bool renderer::update(){
                 m_yaw += -(operateRecord.x - m_preTouchX) * m_ratio;
                 m_preTouchY = operateRecord.y;
                 m_preTouchX = operateRecord.x;
+
+                vec3 cameraPos;
+                cameraPos.y = std::sin(m_pitch) * m_distance;
+                m_temp = std::cos(m_pitch) * m_distance;
+                cameraPos.x = std::sin(m_yaw) * m_temp;
+                cameraPos.z = std::cos(m_yaw) * m_temp;
+
+                m_Ctx.getCamera()->updatePosition(cameraPos);
             } else {
                 m_isInTouch = false;
             }
@@ -47,13 +55,7 @@ bool renderer::update(){
                 m_preTouchX = operateRecord.x;
             }
         }
-        vec3 cameraPos;
-        cameraPos.y = std::sin(m_pitch) * m_distance;
-        m_temp = std::cos(m_pitch) * m_distance;
-        cameraPos.x = std::sin(m_yaw) * m_temp;
-        cameraPos.z = std::cos(m_yaw) * m_temp;
 
-        m_Ctx.getCamera()->updatePosition(cameraPos);
         //std::cerr<<"update return true"<<"\n";
         return true;
     }
@@ -79,6 +81,8 @@ void renderer::render(){
             std::cerr<<"fps: "<< 100 * 1000 / m_DeltaTime <<" frame count: "<<m_FrameCount++<<"\r";
             
         }
+
+        m_Ctx.show();
     }
 
     

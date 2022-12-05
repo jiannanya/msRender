@@ -33,6 +33,7 @@ public:
     void setClearColor(vec4 color);
     void setDrawWireFrame(bool flag);
     void draw();
+    void show();
 
 private:
 

@@ -10,7 +10,7 @@ namespace msr{
 LRESULT CALLBACK ProcessMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     window* tempWindow = (window*)GetProp(hWnd, WINDOW_ENTRY_NAME);
     
-    if (tempWindow == NULL) {
+    if (tempWindow == nullptr) {
         return DefWindowProc(hWnd, uMsg, wParam, lParam);
     }
     OperateRecord *operateRecord = tempWindow->getOperateRecord();
@@ -19,9 +19,11 @@ LRESULT CALLBACK ProcessMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         operateRecord->close = true;
         return 0;
     } else if (uMsg == WM_LBUTTONDOWN) {
+        //std::cout<<"left button down"<<std::endl;
         operateRecord->isLeftBtnDown = true;
         return 0;
     } else if (uMsg == WM_LBUTTONUP) {
+        //std::cout<<"left button up"<<std::endl;
         operateRecord->isLeftBtnDown = false;
         return 0;
     } else {
@@ -39,7 +41,8 @@ window::window(const char *title, framebuffer *fb) {
     m_Width = fb->getWidth();
     m_Height = fb->getHeight();
     m_FrameBuffer = fb;
-    m_ColorBuffer = fb->getColorBuffer();
+    m_ColorBuffer = m_FrameBuffer->getColorBuffer();
+
     RegisterWindowClass();
     createWindow(title);
     createWindowBuffer();
@@ -49,10 +52,10 @@ window::window(const char *title, framebuffer *fb) {
 };
 
 window::~window() {
-    if (m_FrameBuffer) delete m_FrameBuffer;
-    if (m_OperateRecord) delete m_OperateRecord;
-    m_FrameBuffer = nullptr;
-    m_OperateRecord = nullptr;
+    //if (m_FrameBuffer) delete m_FrameBuffer;
+    //if (m_OperateRecord) delete m_OperateRecord;
+    //m_FrameBuffer = nullptr;
+    //m_OperateRecord = nullptr;
 };
 
 void window::RegisterWindowClass() {
@@ -62,11 +65,11 @@ void window::RegisterWindowClass() {
     window_class.lpfnWndProc = ProcessMessage;
     window_class.cbClsExtra = 0;
     window_class.cbWndExtra = 0;
-    window_class.hInstance = GetModuleHandle(NULL);
-    window_class.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-    window_class.hCursor = LoadCursor(NULL, IDC_ARROW);
+    window_class.hInstance = GetModuleHandle(nullptr);
+    window_class.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
+    window_class.hCursor = LoadCursor(nullptr, IDC_ARROW);
     window_class.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-    window_class.lpszMenuName = NULL;
+    window_class.lpszMenuName = nullptr;
     window_class.lpszClassName = WINDOW_CLASS_NAME;
     class_atom = RegisterClass(&window_class);
     assert(class_atom != 0);
@@ -94,10 +97,10 @@ void window::createWindow(const char *title_) {
 
     handle = CreateWindow(WINDOW_CLASS_NAME, title, style,
                           CW_USEDEFAULT, CW_USEDEFAULT, width, height,
-                          NULL, NULL, GetModuleHandle(NULL), NULL);
+                          nullptr, nullptr, GetModuleHandle(nullptr), nullptr);
     
     m_Handle = handle;
-    assert(handle != NULL);
+    assert(handle != nullptr);
 };
 
 
@@ -109,31 +112,33 @@ void window::createWindowBuffer() {
     HDC memory_dc;
 
     window_dc = GetDC(m_Handle);
-    memory_dc = CreateCompatibleDC(window_dc);
-    ReleaseDC(m_Handle, window_dc);
+    memory_dc = CreateCompatibleDC(nullptr);
+    
 
-    memset(&bi_header, 0, sizeof(BITMAPINFOHEADER));
+    bi_header = { 0 };
     bi_header.biSize = sizeof(BITMAPINFOHEADER);
     bi_header.biWidth = m_Width;
     bi_header.biHeight = -m_Height;  /* top-down */
     bi_header.biPlanes = 1;
     bi_header.biBitCount = 32;
     bi_header.biCompression = BI_RGB;
-    dib_bitmap = CreateDIBSection(memory_dc, (BITMAPINFO*)&bi_header,
-                                  DIB_RGB_COLORS, (void**)&m_ColorBuffer,
-                                  NULL, 0);
-    assert(dib_bitmap != NULL);
+    bi_header.biSizeImage = m_Width*m_Height * 4;
+    
+    dib_bitmap = CreateDIBSection(nullptr, (PBITMAPINFO)&bi_header,
+                                  DIB_RGB_COLORS, (void**)&m_FrameBuffer->getColorBuffer(),
+                                  nullptr, 0);
+    assert(dib_bitmap != nullptr);
     old_bitmap = (HBITMAP)SelectObject(memory_dc, dib_bitmap);
     DeleteObject(old_bitmap);
 
     m_MemoryDC = memory_dc;
 
+    ReleaseDC(m_Handle, window_dc);
+
 };
 
 void window::drawBuffer() {
    
-    m_ColorBuffer = m_FrameBuffer->getColorBuffer();
-
     HDC window_dc = GetDC(m_Handle);
     HDC memory_dc = m_MemoryDC;
 

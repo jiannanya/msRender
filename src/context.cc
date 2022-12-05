@@ -13,19 +13,19 @@ context::context(){
 }
 
 context::~context(){
-    delete m_window;
-    delete m_camera;
-    delete m_shader;
-    delete m_mesh;
-    delete m_framebuffer;
-    delete m_rasterizer; 
+    // delete m_window;
+    // delete m_camera;
+    // delete m_shader;
+    // delete m_mesh;
+    // delete m_framebuffer;
+    // delete m_rasterizer; 
 
-    m_window = nullptr;
-    m_camera = nullptr;
-    m_shader = nullptr;
-    m_mesh = nullptr;
-    m_framebuffer = nullptr;
-    m_rasterizer = nullptr; 
+    // m_window = nullptr;
+    // m_camera = nullptr;
+    // m_shader = nullptr;
+    // m_mesh = nullptr;
+    // m_framebuffer = nullptr;
+    // m_rasterizer = nullptr; 
 }
 
 void context::setWindow(window* window){
@@ -88,6 +88,10 @@ void context::draw(){
         return;
     }
 
+    m_shader->model = getIdentityMatrix();
+    m_shader->view = m_camera->getViewMatrix();
+    m_shader->persp = m_camera->getProjectionMatrix();
+
     m_framebuffer->clearColorBuffer(m_clearColor);
 
     //render per face
@@ -137,6 +141,11 @@ void context::draw(){
             m_rasterizer->drawTriangle(viewportPos[0],viewportPos[1],viewportPos[2],m_frameColor,*m_framebuffer);
         }
     }
+}
+
+void context::show(){
+    m_window->drawBuffer();
+    m_framebuffer->swapColorBuffer();
 }
 
 };

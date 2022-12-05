@@ -25,12 +25,14 @@ void camera::updateAttitude(vec3 position, vec3 target, vec3 upDir) {
 
 
 void camera::updatePosition(vec3 position) {
+    //std::cout<<"update camera pos"<<std::endl;
     m_Position = position;
     updateViewMatrix();
 }
 
 
 void camera::updateViewMatrix() {
+    //std::cout<<"update camera ViewMatrix"<<std::endl;
     m_ViewMatrix = lookat(m_Position, m_Target, m_UpDir);
     updateViewProjectionMatrix();
 }

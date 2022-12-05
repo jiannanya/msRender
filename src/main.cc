@@ -52,6 +52,6 @@ int main()
 // #if defined(WIN32) || defined(_WIN32)
 // 	system("mspaint out.bmp");
 // #endif
-    std::cout<<"end main"<<std::endl;
+//    std::cout<<"end main"<<std::endl;
     return 0;
 }
