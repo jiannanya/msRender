@@ -36,7 +36,7 @@ vec3 barycentric(vec3& A, vec3& B, vec3& C, vec3& p) {
     vec3 xvec(C.x - A.x, B.x - A.x, A.x - p.x);
     vec3 yvec(C.y - A.y, B.y - A.y, A.y - p.y);
     vec3 u = cross(xvec, yvec);
-    if(std::abs(u.z) < 0.999f)
+    if(std::abs(u.z) < 1e-2f)
         return vec3(-1, 1, 1); 
 
     return vec3(1.f - (u.x + u.y) / u.z, u.y / u.z, u.x / u.z);
