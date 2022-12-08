@@ -1,4 +1,5 @@
 #include "context.hh"
+#include "triangle.hh"
 
 namespace msr{
 
@@ -70,6 +71,10 @@ void context::setClearColor(vec4 color){
     m_clearColor = color;
 }
 
+void context::setModelMatrix(mat4 ma){
+    m_modelMatrix = ma;
+}
+
 bool context::isCtxOk(){
     return  m_window && m_framebuffer && m_camera && m_shader && m_mesh;
 }
@@ -88,48 +93,82 @@ void context::draw(){
         return;
     }
 
-    m_shader->model = getIdentityMatrix();
-    m_shader->view = m_camera->getViewMatrix();
-    m_shader->persp = m_camera->getProjectionMatrix();
+    m_shader->setModel(m_modelMatrix);
+    m_shader->setView(m_camera->getViewMatrix());
+    m_shader->setPerspective(m_camera->getProjectionMatrix());
 
     m_framebuffer->clearColorBuffer(m_clearColor);
 
+    mat4 n_matrix = transpose(inverse(m_modelMatrix));// normal transform matrix
+
     //render per face
     for(int i = 0; i < m_mesh->faceNum(); ++i) {
-        // 1. get face vertexs 
-        vec3 originVerts[3];
-        for(int j = 0; j < 3; ++j)
-            originVerts[j] = m_mesh->getVertex(i, j);
 
-        // 2. transform to clip coordinates
-        vec4 clipPos[3];
-        for(int j = 0; j < 3; ++j)
-            m_shader->vert(originVerts[j], clipPos[j]);
+        triangle tri = triangle();
+
+        // 1. get face vertexs 
+        vec2 uv[3];
+        vec4 col[3];
+        vec3 localVerts[3], nor[3], nw[3];
+        for(int j = 0; j < 3; ++j){
+            localVerts[j] = m_mesh->getVertex(i, j);
+            uv[j] = m_mesh->getTexcoord(i,j);
+            nor[j] = m_mesh->getNormal(i,j);
+            col[j] = m_frameColor;
+
+            vec4 tn = vec4(nor[j].x,nor[j].y,nor[j].z,0.0);
+            vec4 tnn = n_matrix * tn;
+            nw[j] = vec3(tnn.x, tnn.y, tnn.z);
+        }
+
+        
+        tri.setVertices(localVerts);
+        tri.setTexCords(uv);
+        tri.setNormals(nor);
+        tri.setWorldNormals(nw);
+        tri.setColors(col);
+
+
+        // 2. transform to clip coordinates using vertex shader
+        vec4 clipPos[3], worldPosH[3];
+        for(int k = 0; k < 3; ++k)
+            m_shader->vert(localVerts[k],worldPosH[k], clipPos[k]); 
 
         // 3. clip
-        bool isDiscard = false;
-        for(int j = 0; j < 3; ++j)
+        UINT discardCount = 0;
+        vec3 worldPos[3];
+        for(int k = 0; k < 3; ++k)
         {
-            vec4& vertex = clipPos[j];
+            vec4& vertex = clipPos[k];
             float w = vertex.w;
-            if(w == 0.f /*|| vertex.z < 0.f || vertex.z > w || vertex.x < -w || vertex.x > w || vertex.y < -w || vertex.y > w*/)
+            if(vertex.z < -w || vertex.z > 0.f || vertex.x < -w || vertex.x > w || vertex.y < -w || vertex.y > w)
             {
-                isDiscard = true;
-                break;
+                discardCount++;
             }
             // normalized to (-1, 1)
             vertex = vertex / w;  
+
+            vec4& vw = worldPosH[k];
+            vw = vw/vw.w;
+            worldPos[k] = vec3(vw.x,vw.y,vw.z);
         }
-        if(isDiscard)
+
+        tri.setWorldVertices(worldPos);
+
+        // all three points of a triangle outside is clipped, otherwise keep rendering
+        if(discardCount==3)
             continue;
 
-        // 4. transfer to viewport
-        vec2 viewportPos[3];
-        for(int j = 0; j < 3; ++j)
+        // 4. viewport
+        vec3 viewportPos[3];
+        for(int k = 0; k < 3; ++k)
         {
-            viewportPos[j].x = (clipPos[j].x + 1.f) * m_Width * 0.5f;
-            viewportPos[j].y = (1.f - clipPos[j].y) * m_Height * 0.5f;
+            viewportPos[k].x = (clipPos[k].x + 1.f) * m_Width * 0.5f;
+            viewportPos[k].y = (1.f - clipPos[k].y) * m_Height * 0.5f;
+            viewportPos[k].z = clipPos[k].z;
         }
+
+        tri.setViewPortVertices(viewportPos);
 
         // render frame
         if(m_isDrawWireFrame)
@@ -138,14 +177,14 @@ void context::draw(){
             m_rasterizer->drawLine(round(viewportPos[0].x), round(viewportPos[0].y), round(viewportPos[2].x), round(viewportPos[2].y), m_frameColor,*m_framebuffer);
             m_rasterizer->drawLine(round(viewportPos[2].x), round(viewportPos[2].y), round(viewportPos[1].x), round(viewportPos[1].y), m_frameColor,*m_framebuffer);
         }else{
-            m_rasterizer->drawTriangle(viewportPos[0],viewportPos[1],viewportPos[2],m_frameColor,*m_framebuffer);
+            //m_rasterizer->drawTriangle(viewportPos[0],viewportPos[1],viewportPos[2],m_frameColor,*m_framebuffer);
+            m_rasterizer->drawTriangle(tri,*m_shader,*m_framebuffer,*m_camera);
         }
     }
 }
 
 void context::show(){
     m_window->drawBuffer();
-    m_framebuffer->swapColorBuffer();
 }
 
 };

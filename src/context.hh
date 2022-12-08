@@ -24,6 +24,7 @@ public:
     void setMesh(mesh* mesh);
     void setFrameBuffer(framebuffer* fb);
     void setTexture(texture* tex);
+    
 
     framebuffer* getFrameBuffer()const;
     window* getWindow()const;
@@ -32,6 +33,7 @@ public:
     
     void setClearColor(vec4 color);
     void setDrawWireFrame(bool flag);
+    void setModelMatrix(mat4 ma);
     void draw();
     void show();
 
@@ -50,6 +52,7 @@ private:
     int m_Width, m_Height;
     vec4 m_frameColor = vec4(1.0f,1.0f,1.0f,1.0f);
     vec4 m_clearColor;
+    mat4 m_modelMatrix;
 
 
 

@@ -8,7 +8,7 @@ namespace msr{
 
 const char *TITLE = "my real time soft render";
 const char *OBJ_PATH = "../assert/african_head.obj";
-const char *OBJ_TEXTURE_PATH =  "../assert/floor_diffuse.tga";
+const char *OBJ_TEXTURE_PATH =  "../assert/african_head_diffuse.tga";
 
 constexpr int WINDOW_WIDTH = 800;
 constexpr int WINDOW_HEIGHT = 600;

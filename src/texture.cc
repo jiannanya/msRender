@@ -8,6 +8,8 @@ void texture::loadFile(const string& path) {
     if(!data)
     {
         std::cerr << "Texture load failed at path: " << path << std::endl;
+    }else{
+        std::cout << "lod texture: "<< path <<std::endl;
     }
 }
 
@@ -21,7 +23,7 @@ vec4 texture::sample(vec2 uv) {
     return getColor(x, y);
 }
 
-vec4 texture::getColor(int x, int y) {
+vec4 texture::getColor(float x, float y) {
     vec4 ret;
     if(!data || x < 0 || y < 0 || x >= width || y >= height)
         return ret;

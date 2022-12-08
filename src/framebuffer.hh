@@ -11,13 +11,14 @@ public:
     framebuffer(int width, int height);
     ~framebuffer();
 
-    BYTE*& getColorBuffer();
+    BYTE*& getColorBuffer();//需要返回引用用来创建windows窗口
     float *getZBuffer();
+    float getZ(unsigned int x, unsigned int y);
+    void setZ(unsigned int x, unsigned int y, float value);
     int getWidth()const;
     int getHeight()const;
     int getChannelNums()const;
     void clearColorBuffer(vec4 color);
-    void swapColorBuffer();
     void setPixelColor(unsigned int x, unsigned int y, vec4 color);
 
 private:
@@ -25,9 +26,8 @@ private:
     int m_Height;
     int m_Channel;
     int m_PixelCount;
-    BYTE*& m_ColorBufferPtr;
-    BYTE *m_ColorBuffer1;
-    BYTE *m_ColorBuffer2; //双重缓存
+    BYTE* m_ColorBuffer;
+//    BYTE *m_ColorBuffer1;
     float* m_ZBuffer;
 };
 

@@ -7,7 +7,7 @@
             "command": "cmd",
             "args": [
                 "/c",
-                "cd ${workspaceRoot}/nbuild && ninja"
+                "cd ${workspaceRoot}/nbuild && cmake .. && ninja"
             ],
             "group": {
                 "kind": "build",

@@ -25,7 +25,7 @@ void camera::updateAttitude(vec3 position, vec3 target, vec3 upDir) {
 
 
 void camera::updatePosition(vec3 position) {
-    //std::cout<<"update camera pos"<<std::endl;
+    //std::cout<<"update camera pos: "<<position.x<<", "<<position.y<<", "<<position.z<<std::endl;
     m_Position = position;
     updateViewMatrix();
 }

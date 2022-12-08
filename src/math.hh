@@ -7,6 +7,7 @@
 namespace msr{
 
 float frac(float t);
+float gamma(float x);
 
 template<typename T>
 T clamp(T x, T min, T max) {
@@ -179,6 +180,23 @@ public:
         }
         return ret;
     }
+
+    mat(){}
+
+    mat& operator=(const mat& m){
+        for(int i=0;i<nRow;i++)
+            for(int j=0;j<nCol;j++)
+                rows[i][j] = m[i][j];
+
+        return *this;
+    }
+
+    mat(const mat& m){
+        for(int i=0;i<nRow;i++)
+            for(int j=0;j<nCol;j++)
+                rows[i][j] = m[i][j];
+    }
+    
 };
 
 typedef mat<4, 4> mat4;
@@ -189,6 +207,9 @@ mat4 getScaleMatrix(float x, float y, float z);
 //mat4 getRotateMatrix();
 mat4 lookat(vec3 eye, vec3 center, vec3 up);
 mat4 perspective(float fov, float aspect, float znear, float zfar);
+mat4 Gaussian_elimination_mat4(float (*arr)[4]);
+mat4 inverse(mat4 m);
+mat4 transpose(mat4 m);
 
 template<int nRow, int nCol> vec<nRow> operator*(const mat<nRow, nCol>& lhs, const vec<nCol>& rhs)
 {
@@ -238,7 +259,7 @@ template<int nRow, int nCol> std::ostream& operator<<(std::ostream& out, const m
 }
 
 // 求三角形ABC中p点重心坐标
-vec3 barycentric(vec2& A, vec2& B, vec2& C, vec2& p);
+vec3 barycentric(vec3& A, vec3& B, vec3& C, vec3& p);
 
 };
 

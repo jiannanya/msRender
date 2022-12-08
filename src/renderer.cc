@@ -33,8 +33,8 @@ bool renderer::update(){
 
         if (m_isInTouch) {
             if (operateRecord.isLeftBtnDown) {
-                m_pitch += (operateRecord.y - m_preTouchY) * m_ratio;
-                m_yaw += -(operateRecord.x - m_preTouchX) * m_ratio;
+                m_pitch += -(operateRecord.y - m_preTouchY) * m_ratio;
+                m_yaw += (operateRecord.x - m_preTouchX) * m_ratio;
                 m_preTouchY = operateRecord.y;
                 m_preTouchX = operateRecord.x;
 

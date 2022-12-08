@@ -25,7 +25,7 @@ public:
     vec4 sample(vec2 uv);
 private:
 
-    vec4 getColor(int x, int y);
+    vec4 getColor(float x, float y);
 
    
 };
