@@ -15,7 +15,7 @@ framebuffer::framebuffer(int width, int height){
     memset(m_ColorBuffer,0,m_PixelCount*m_Channel);
 
     m_ZBuffer = new float[m_PixelCount];
-    memset(m_ZBuffer,-(std::numeric_limits<float>::max()),m_PixelCount);
+    memset(m_ZBuffer,0,m_PixelCount);
   
 
 };
@@ -43,12 +43,12 @@ float *framebuffer::getZBuffer(){
 }
 
 float framebuffer::getZ(unsigned int x, unsigned int y){
-    UINT index = y * m_Width + x * m_Channel;
+    UINT index = y * m_Width + x;
     return m_ZBuffer[index];
 }
 
 void framebuffer::setZ(unsigned int x, unsigned int y, float value){
-    UINT index = y * m_Width + x * m_Channel;
+    UINT index = y * m_Width + x;
     m_ZBuffer[index] = value;
 }
 
@@ -68,6 +68,10 @@ void framebuffer::clearColorBuffer(vec4 color) {
     }
     
 };
+
+void framebuffer::clearZBuffer(){
+    for (int i=m_PixelCount; i--; m_ZBuffer[i] = -(std::numeric_limits<float>::max)());
+}
 
 
 int framebuffer::getWidth()const {

@@ -98,6 +98,7 @@ void context::draw(){
     m_shader->setPerspective(m_camera->getProjectionMatrix());
 
     m_framebuffer->clearColorBuffer(m_clearColor);
+    m_framebuffer->clearZBuffer();
 
     mat4 n_matrix = transpose(inverse(m_modelMatrix));// normal transform matrix
 
@@ -145,7 +146,7 @@ void context::draw(){
             {
                 discardCount++;
             }
-            // normalized to (-1, 1)
+            // perspective division, normalized to (-1, 1)
             vertex = vertex / w;  
 
             vec4& vw = worldPosH[k];

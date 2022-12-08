@@ -8,7 +8,7 @@ void rasterizer::drawPixel(int x, int y, const vec4& color,framebuffer& fb){
 }
 
 void rasterizer::drawPixel(fragmentdata& fg, shader& sh,framebuffer& fb){
-    vec4 color = sh.frag_phong(fg);
+    vec4 color = sh.frag_texture(fg);
     //std::cout<<"pixel: "<<fg.screenPos.x<<", "<<fg.screenPos.y<<", "<<"pixel color: "<<color.x<<", "<<color.y<<", "<<color.z<<std::endl;
     fb.setPixelColor(fg.screenPos.x,fg.screenPos.y,color);
 }
@@ -55,18 +55,29 @@ void rasterizer::drawLine(int x1, int y1, int x2, int y2, const vec4& color,fram
 
 
 void rasterizer::drawTriangle(vec3 v1, vec3 v2, vec3 v3, const vec4& color,framebuffer& fb) {
-    vec2 bboxmin(fb.getWidth() - 1, fb.getHeight() - 1);
-    vec2 bboxmax(0, 0);
+
+    vec2 bboxmin,bboxmax;
+
     bboxmin.x = std::max(0.f, std::min(v1.x, std::min(v2.x, v3.x)));
     bboxmin.y = std::max(0.f, std::min(v1.y, std::min(v2.y, v3.y)));
     bboxmax.x = std::min((float)(fb.getWidth() - 1), std::max(v1.x, std::max(v2.x, v3.x)));
     bboxmax.y = std::min((float)(fb.getHeight() - 1), std::max(v1.y, std::max(v2.y, v3.y)));
 
     vec3 p;
+
     for(p.x = bboxmin.x; p.x <= bboxmax.x; p.x++){
         for(p.y = bboxmin.y; p.y <= bboxmax.y; p.y++){
+
             vec3 bc = barycentric(v1, v2, v3, p);
-            if(bc.x < 0 || bc.y < 0 || bc.z < 0) continue;
+            if(bc.x < 0 || bc.y < 0 || bc.z < 0) 
+                continue;
+
+            //depth test
+            p.z = v1.z*bc.x + v2.z*bc.y + v3.z*bc.z;
+            if(p.z<(fb.getZ(p.x,p.y)))
+                continue;
+            else 
+                fb.setZ(p.x,p.y,p.z);
 
             drawPixel(p.x, p.y,color,fb);
         }
@@ -98,6 +109,7 @@ void rasterizer::drawTriangle(triangle &tri,shader& sh,framebuffer& fb, camera& 
 
     vec2 bboxmin(fb.getWidth() - 1, fb.getHeight() - 1);
     vec2 bboxmax(0, 0);
+
     bboxmin.x = std::max(0.f, std::min(v1.x, std::min(v2.x, v3.x)));
     bboxmin.y = std::max(0.f, std::min(v1.y, std::min(v2.y, v3.y)));
     bboxmax.x = std::min((float)(fb.getWidth() - 1), std::max(v1.x, std::max(v2.x, v3.x)));

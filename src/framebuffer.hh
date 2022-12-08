@@ -19,6 +19,7 @@ public:
     int getHeight()const;
     int getChannelNums()const;
     void clearColorBuffer(vec4 color);
+    void clearZBuffer();
     void setPixelColor(unsigned int x, unsigned int y, vec4 color);
 
 private:
