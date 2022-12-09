@@ -1,9 +1,12 @@
-#include <iostream>
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 
-#include "include.hh"
-#include "global.hh"
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <cstdlib>
+#include <memory.h>
+
 #include "mesh.hh"
 #include "shader.hh"
 #include "windows.hh"
@@ -15,45 +18,62 @@
 #include "math.hh"
 #include "triangle.hh"
 #include "pointlight.hh"
+#include "scene.hh"
+
+using namespace msr;
+
+const char *TITLE = "my real time soft render";
+const char *OBJ_PATH = "../assert/african_head.obj";
+const char *OBJ_TEXTURE_PATH =  "../assert/african_head_diffuse.tga";
+
+constexpr int WINDOW_WIDTH = 800;
+constexpr int WINDOW_HEIGHT = 600;
+constexpr float FOV_INIT = 45.0f;
+
+vec3 CAM_POS_INIT = vec3(1, 1, 3);
+vec3 CAM_TARGET_INIT = vec3(0,0,0);
+vec3 CAM_UP_INIT = vec3(0,1,0);
 
 int main()
 {
+    framebuffer ms_framebuffer = framebuffer(WINDOW_WIDTH,WINDOW_HEIGHT);
+    window ms_window = window(TITLE, &ms_framebuffer);
 
-    msr::framebuffer fb(msr::WINDOW_WIDTH,msr::WINDOW_HEIGHT);
-    msr::window wd(msr::TITLE, &fb);
+    mesh ms_model1 = mesh(OBJ_PATH);
+    texture ms_texture = texture(std::string(OBJ_TEXTURE_PATH));
 
-    msr::mesh model = msr::mesh(msr::OBJ_PATH);
-    msr::texture tex = msr::texture(std::string(msr::OBJ_TEXTURE_PATH));
+    camera ms_camera = camera(FOV_INIT, float(WINDOW_WIDTH) / WINDOW_HEIGHT,CAM_POS_INIT, CAM_TARGET_INIT,CAM_UP_INIT);
 
-    msr::camera cam(msr::FOV_INIT, float(msr::WINDOW_WIDTH) / msr::WINDOW_HEIGHT,msr::CAM_POS_INIT, msr::CAM_TARGET_INIT,msr::CAM_UP_INIT);
+    mat4 modelMatrix = getIdentityMatrix();
 
-    msr::mat4 modelMatrix = msr::getIdentityMatrix();
+    shader ms_shader = shader();
+    ms_shader.setModel(modelMatrix);
+    ms_shader.setView(ms_camera.getViewMatrix());
+    ms_shader.setPerspective(ms_camera.getProjectionMatrix());
+    ms_shader.setDiffuseTexture(&ms_texture);
 
-    msr::shader phone_shader = msr::shader();
-    phone_shader.setModel(modelMatrix);
-    phone_shader.setView(cam.getViewMatrix());
-    phone_shader.setPerspective(cam.getProjectionMatrix());
-    phone_shader.setDiffuseTexture(&tex);
+    pointlight ms_light1 = pointlight(vec3(0, 20, 0), vec3(1,1,1), 500);
+    pointlight ms_light2 = pointlight(vec3(20, 0, 0), vec3(1,1,1), 500);
+    ms_shader.pushLight(&ms_light1);
+    ms_shader.pushLight(&ms_light2);
 
-    msr::pointlight light1 = msr::pointlight(msr::vec3(0, 20, 0), msr::vec3(1,1,1), 500);
-    msr::pointlight light2 = msr::pointlight(msr::vec3(20, 0, 0), msr::vec3(1,1,1), 500);
-    phone_shader.pushLight(&light1);
-    phone_shader.pushLight(&light2);
+    scene ms_scene = scene();
+    ms_scene.addMesh(&ms_model1);
 
 
-    msr::context ctx = msr::context();
-    ctx.setFrameBuffer(&fb);
-    ctx.setWindow(&wd);
-    ctx.setCamera(&cam);
-    ctx.setMesh(&model);
-    ctx.setTexture(&tex);
-    ctx.setShader(&phone_shader);
-    ctx.setDrawWireFrame(false);
-    ctx.setClearColor(msr::vec4(0.0f,0.0f,0.0f,1.0f));
-    ctx.setModelMatrix(modelMatrix);
+    context ms_context = context();
+    ms_context.setFrameBuffer(&ms_framebuffer);
+    ms_context.setWindow(&ms_window);
+    ms_context.setCamera(&ms_camera);
+    ms_context.setScene(&ms_scene);
+    ms_context.setTexture(&ms_texture);
+    ms_context.setShader(&ms_shader);
+    ms_context.setDrawWireFrame(false);
+    ms_context.setClearColor(vec4(0.0f,0.0f,0.0f,1.0f));
+    ms_context.setModelMatrix(modelMatrix);
 
-    msr::renderer render(ctx);
-    render.render();
+    renderer ms_render =  renderer(ms_context);
+    ms_render.render();
 
     return 0;
 }

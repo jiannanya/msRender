@@ -1,8 +1,6 @@
 #ifndef RENDERER_HH
 #define RENDERER_HH
 
-#include "include.hh"
-
 #include <string>
 #include <fstream>
 #include <chrono>
@@ -18,6 +16,7 @@ class renderer
 {
 public:
 
+    renderer(){};
     explicit renderer(context &c);
     ~renderer(){}
 

@@ -3,7 +3,6 @@
 
 #include <windows.h>
 #include <minwindef.h>
-#include "include.hh"
 #include "camera.hh"
 #include "framebuffer.hh"
 
@@ -27,6 +26,7 @@ class window {
 public:
     static void RegisterWindowClass();
 
+    window(){}
     window(const char *title, framebuffer *fb);
     ~window();
     bool shouldClose();

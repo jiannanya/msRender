@@ -1,7 +1,6 @@
 #ifndef CONTEXT_HH
 #define CONTEXT_HH
 
-#include "include.hh"
 #include "math.hh"
 #include "mesh.hh"
 #include "shader.hh"
@@ -10,6 +9,7 @@
 #include "framebuffer.hh"
 #include "texture.hh"
 #include "rasterizer.hh"
+#include "scene.hh"
 
 namespace msr{
 
@@ -21,9 +21,9 @@ public:
     void setWindow(window* window);
     void setCamera(camera* camera);
     void setShader(shader* camera);
-    void setMesh(mesh* mesh);
     void setFrameBuffer(framebuffer* fb);
     void setTexture(texture* tex);
+    void setScene(scene* sce);
     
 
     framebuffer* getFrameBuffer()const;
@@ -44,10 +44,11 @@ private:
     window* m_window;
     camera* m_camera;
     shader* m_shader;
-    mesh*   m_mesh;
     framebuffer* m_framebuffer;
     rasterizer* m_rasterizer;
     texture* m_texture;
+    scene* m_scene;
+
     bool m_isDrawWireFrame;
     int m_Width, m_Height;
     vec4 m_frameColor = vec4(1.0f,1.0f,1.0f,1.0f);

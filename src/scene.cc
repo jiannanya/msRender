@@ -3,12 +3,16 @@
 
 namespace msr{
 
+scene::scene(){
+    meshList = std::vector<mesh*>();
+}
+
 void scene::addMesh(mesh* m){
     meshList.push_back(m);
 }
 
-auto scene::getMeshList(){
-    return &meshList;
+std::vector<mesh*> scene::getMeshList(){
+    return meshList;
 }
 
 }

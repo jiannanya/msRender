@@ -1,6 +1,5 @@
 
 #include "framebuffer.hh"
-#include "include.hh"
 #include <windows.h>
 
 namespace msr{
@@ -20,18 +19,7 @@ framebuffer::framebuffer(int width, int height){
 
 };
 
-framebuffer::~framebuffer() {
-    // if (m_ColorBuffer1) delete m_ColorBuffer1;
-    // m_ColorBuffer1 = nullptr;
-
-    // if (m_ColorBuffer2) delete m_ColorBuffer2;
-    // m_ColorBuffer2 = nullptr;
-
-    // m_ColorBuffer = nullptr;
-
-    // if(m_ZBuffer)delete m_ZBuffer;
-    // m_ZBuffer = nullptr;
-};
+framebuffer::~framebuffer() {};
 
 
 BYTE*& framebuffer::getColorBuffer() {
@@ -70,7 +58,8 @@ void framebuffer::clearColorBuffer(vec4 color) {
 };
 
 void framebuffer::clearZBuffer(){
-    for (int i=m_PixelCount; i--; m_ZBuffer[i] = -(std::numeric_limits<float>::max)());
+    for (int i=m_PixelCount-1;i>=0 ;i--)
+        m_ZBuffer[i] = -(std::numeric_limits<float>::max)();
 }
 
 

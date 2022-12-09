@@ -50,13 +50,14 @@ bool renderer::update(){
             }
         } else {
             if (operateRecord.isLeftBtnDown) {
+                //std::cerr<<"intouch\n";
                 m_isInTouch = true;
                 m_preTouchY = operateRecord.y;
                 m_preTouchX = operateRecord.x;
             }
         }
 
-        //std::cerr<<"update return true"<<"\n";
+        //std::cerr<<"update return true"<<m_isInTouch<<"\n";
         return true;
     }
     

@@ -33,18 +33,12 @@ void rasterizer::drawLine(int x1, int y1, int x2, int y2, const vec4& color,fram
 
     int dx = x2 - x1;
     int dy = y2 - y1;
-    // float de = std::abs(dy / float(dx));
-    // float e = 0;
+
     int de2 = std::abs(dy) * 2;
     int e2 = 0;
     int y = y1;
     for(int x = x1; x <= x2; ++x){
         (steep ? drawPixel(y, x, color,fb) : drawPixel(x, y, color,fb));
-        // e += de;
-        // if(e > 0.5f){
-        //     y += (y2 > y1 ? 1 : -1);
-        //     e -= 1.f;
-        // }
         e2 += de2;
         if(e2 > dx){
             y += (y2 > y1 ? 1 : -1);
@@ -53,7 +47,21 @@ void rasterizer::drawLine(int x1, int y1, int x2, int y2, const vec4& color,fram
     }
 }
 
-void rasterizer::drawTriangle(vec3 v1, vec3 v2, vec3 v3, const vec4& color,framebuffer& fb) {
+void rasterizer::drawTriangleLine(triangle &tri, const vec4& color,framebuffer& fb){
+    vec3 v1 = tri.avp();
+    vec3 v2 = tri.bvp();
+    vec3 v3 = tri.cvp();
+
+    drawLine(round(v1.x), round(v1.y), round(v2.x), round(v2.y), color, fb);
+    drawLine(round(v1.x), round(v1.y), round(v3.x), round(v3.y), color, fb);
+    drawLine(round(v3.x), round(v3.y), round(v2.x), round(v2.y), color, fb);
+}
+
+void rasterizer::drawTriangle(triangle &tri, const vec4& color,framebuffer& fb) {
+
+    vec3 v1 = tri.avp();
+    vec3 v2 = tri.bvp();
+    vec3 v3 = tri.cvp();
 
     vec2 bboxmin,bboxmax;
 

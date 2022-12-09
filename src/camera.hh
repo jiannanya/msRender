@@ -1,7 +1,6 @@
 #ifndef CAMERA_HH
 #define CAMERA_HH
 
-#include "include.hh"
 #include "math.hh"
 
 namespace msr{
@@ -20,6 +19,7 @@ public:
     float m_Fovy;
     float m_Aspect;
 
+    camera(){}
     camera(float fovy, float aspect,vec3 position, vec3 target, vec3 upDir=vec3(0,1,0));
 
     void updateAttitude(vec3 position, vec3 target, vec3 upDir=vec3(0,1,0));

@@ -7,27 +7,13 @@ context::context(){
     m_window = nullptr;
     m_camera = nullptr;
     m_shader = nullptr;
-    m_mesh = nullptr;
+    m_scene = nullptr;
     m_framebuffer = nullptr;
     m_isDrawWireFrame = false;
     m_rasterizer = new rasterizer();   
 }
 
-context::~context(){
-    // delete m_window;
-    // delete m_camera;
-    // delete m_shader;
-    // delete m_mesh;
-    // delete m_framebuffer;
-    // delete m_rasterizer; 
-
-    // m_window = nullptr;
-    // m_camera = nullptr;
-    // m_shader = nullptr;
-    // m_mesh = nullptr;
-    // m_framebuffer = nullptr;
-    // m_rasterizer = nullptr; 
-}
+context::~context(){}
 
 void context::setWindow(window* window){
     m_window = window;
@@ -41,10 +27,6 @@ void context::setShader(shader* shader){
     m_shader = shader;
 }
 
-void context::setMesh(mesh* mesh){
-    m_mesh = mesh;
-}
-
 void context::setFrameBuffer(framebuffer* fb){
     m_framebuffer = fb;
     m_Width = fb->getWidth();
@@ -53,6 +35,10 @@ void context::setFrameBuffer(framebuffer* fb){
 
 void context::setTexture(texture* tex){
     m_texture = tex;
+}
+
+void context::setScene(scene* sce){
+    m_scene = sce;
 }
 
 framebuffer* context::getFrameBuffer()const{
@@ -76,7 +62,7 @@ void context::setModelMatrix(mat4 ma){
 }
 
 bool context::isCtxOk(){
-    return  m_window && m_framebuffer && m_camera && m_shader && m_mesh;
+    return  m_window && m_framebuffer && m_camera && m_shader && m_scene;
 }
 
 void context::setDrawWireFrame(bool flag){
@@ -101,9 +87,13 @@ void context::draw(){
     m_framebuffer->clearZBuffer();
 
     mat4 n_matrix = transpose(inverse(m_modelMatrix));// normal transform matrix
+    
+    auto mesh_list = m_scene->getMeshList();
+    
 
     //render per face
-    for(int i = 0; i < m_mesh->faceNum(); ++i) {
+    for(auto&mesh: mesh_list)
+    for(int i = 0; i < mesh->faceNum(); ++i) {
 
         triangle tri = triangle();
 
@@ -112,9 +102,9 @@ void context::draw(){
         vec4 col[3];
         vec3 localVerts[3], nor[3], nw[3];
         for(int j = 0; j < 3; ++j){
-            localVerts[j] = m_mesh->getVertex(i, j);
-            uv[j] = m_mesh->getTexcoord(i,j);
-            nor[j] = m_mesh->getNormal(i,j);
+            localVerts[j] = mesh->getVertex(i, j);
+            uv[j] = mesh->getTexcoord(i,j);
+            nor[j] = mesh->getNormal(i,j);
             col[j] = m_frameColor;
 
             vec4 tn = vec4(nor[j].x,nor[j].y,nor[j].z,0.0);
@@ -171,14 +161,12 @@ void context::draw(){
 
         tri.setViewPortVertices(viewportPos);
 
-        // render frame
+        // render framewire
         if(m_isDrawWireFrame)
         {
-            m_rasterizer->drawLine(round(viewportPos[0].x), round(viewportPos[0].y), round(viewportPos[1].x), round(viewportPos[1].y), m_frameColor,*m_framebuffer);
-            m_rasterizer->drawLine(round(viewportPos[0].x), round(viewportPos[0].y), round(viewportPos[2].x), round(viewportPos[2].y), m_frameColor,*m_framebuffer);
-            m_rasterizer->drawLine(round(viewportPos[2].x), round(viewportPos[2].y), round(viewportPos[1].x), round(viewportPos[1].y), m_frameColor,*m_framebuffer);
+            m_rasterizer->drawTriangleLine(tri,m_frameColor,*m_framebuffer);
         }else{
-            //m_rasterizer->drawTriangle(viewportPos[0],viewportPos[1],viewportPos[2],m_frameColor,*m_framebuffer);
+            //m_rasterizer->drawTriangle(tri,m_frameColor,*m_framebuffer);
             m_rasterizer->drawTriangle(tri,*m_shader,*m_framebuffer,*m_camera);
         }
     }

@@ -8,9 +8,9 @@ namespace msr{
 
 class scene{
 public:
-    scene(){}
+    scene();
     void addMesh(mesh* m);
-    auto getMeshList();
+    std::vector<mesh*> getMeshList();
 
 private:
 

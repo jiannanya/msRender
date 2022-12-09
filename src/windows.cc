@@ -9,7 +9,7 @@ namespace msr{
 
 LRESULT CALLBACK ProcessMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     window* tempWindow = (window*)GetProp(hWnd, WINDOW_ENTRY_NAME);
-    
+    //std::cerr<<"in intouch\n";
     if (tempWindow == nullptr) {
         return DefWindowProc(hWnd, uMsg, wParam, lParam);
     }
@@ -51,12 +51,7 @@ window::window(const char *title, framebuffer *fb) {
     SetProp(m_Handle, WINDOW_ENTRY_NAME, this);
 };
 
-window::~window() {
-    //if (m_FrameBuffer) delete m_FrameBuffer;
-    //if (m_OperateRecord) delete m_OperateRecord;
-    //m_FrameBuffer = nullptr;
-    //m_OperateRecord = nullptr;
-};
+window::~window() {};
 
 void window::RegisterWindowClass() {
     ATOM class_atom;
@@ -166,6 +161,7 @@ bool window::shouldClose() {
 };
 
 void window::updateOperateRecord() {
+    //std::cout<<"update operation"<<std::endl;
     POINT point;
     GetCursorPos(&point);
     ScreenToClient(m_Handle, &point);

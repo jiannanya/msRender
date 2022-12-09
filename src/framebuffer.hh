@@ -8,6 +8,7 @@ namespace msr{
 
 class framebuffer {
 public:
+    framebuffer(){}
     framebuffer(int width, int height);
     ~framebuffer();
 
