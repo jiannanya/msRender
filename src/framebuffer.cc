@@ -1,6 +1,7 @@
 
 #include "framebuffer.hh"
 #include <windows.h>
+#include <limits>
 
 namespace msr{
 

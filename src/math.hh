@@ -3,6 +3,7 @@
 
 #include<cassert>
 #include<iostream>
+#include<cmath>
 
 namespace msr{
 

@@ -29,12 +29,7 @@ private:
     void input_poll_events(void);
 
     context m_Ctx;
-    
-    std::chrono::steady_clock::time_point m_CurTime;
-    std::chrono::steady_clock::time_point m_PreTime;
-    float m_DeltaTime;
-    float m_Fps;
-    int m_FrameCount;
+
 
     bool m_isInTouch;
     float m_distance = 2.0f;

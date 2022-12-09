@@ -5,7 +5,6 @@ namespace msr{
 renderer::renderer(context &c){
     m_Ctx = c;
 
-    m_FrameCount = 0;
     m_distance = 2.0f;
     m_pitch = 0.0f;
     m_yaw = 0.0f;
@@ -64,8 +63,8 @@ bool renderer::update(){
 }
 
 void renderer::render(){
-    m_PreTime = std::chrono::high_resolution_clock::now();
-
+    auto preTime = std::chrono::high_resolution_clock::now();
+    int m_FrameCount = 0;
     // m_Ctx.draw();
     // save("out.png");
 
@@ -76,10 +75,10 @@ void renderer::render(){
         m_FrameCount++;
 
         if(m_FrameCount%100==0){
-            m_CurTime = std::chrono::high_resolution_clock::now();
-            m_DeltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(m_CurTime - m_PreTime).count();
-            m_PreTime = m_CurTime;
-            std::cerr<<"fps: "<< 100 * 1000 / m_DeltaTime <<" frame count: "<<m_FrameCount++<<"\r";
+            auto curTime = std::chrono::high_resolution_clock::now();
+            auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(curTime - preTime).count();
+            preTime = curTime;
+            std::cerr<<"fps: "<< 100 * 1000 / deltaTime <<" frame count: "<<m_FrameCount++<<"\r";
             
         }
 
