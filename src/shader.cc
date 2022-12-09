@@ -36,20 +36,12 @@ vec4 shader::frag_phong(fragmentdata& fg) {
     vec4 texture_color = diffuseTex->sample(fg.uv);
 
     //环境光、漫反射和高光系数
-    //kd = texture_color / 255.f;
-    kd = {0.f, 0.f, 0.5f, 1.0f};
+    kd = texture_color; // using texture
+    //kd = {0.f, 0.f, 0.5f, 1.0f}; // not using texture
     ks = 0.7937;
     ka = 0.005f;
     amb_light_intensity = 10.f;
 
-
-
-    // auto l1 = light{{20, 20, 20}, {500, 500, 500}};
-    // auto l2 = light{{-20, 20, 0}, {500, 500, 500}};//灯光强度、位置
-
-    // std::vector<light> lights = {l1, l2};
-    // vec4 amb_light_intensity{10, 10, 10};//环境光强度
-    // vec4 eye_pos{0, 0, 10};//眼睛观测位置
 
     float p = 150;
 

@@ -9,7 +9,7 @@ namespace msr{
 class scene{
 public:
     scene(){}
-    void pushMesh(mesh* m);
+    void addMesh(mesh* m);
     auto getMeshList();
 
 private:

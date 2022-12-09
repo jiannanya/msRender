@@ -164,8 +164,8 @@ void context::draw(){
         vec3 viewportPos[3];
         for(int k = 0; k < 3; ++k)
         {
-            viewportPos[k].x = (clipPos[k].x + 1.f) * m_Width * 0.5f;
-            viewportPos[k].y = (1.f - clipPos[k].y) * m_Height * 0.5f;
+            viewportPos[k].x = int((clipPos[k].x + 1.f) * m_Width * 0.5f); //need cast to int for preventing gap between triangles
+            viewportPos[k].y = int((1.f - clipPos[k].y) * m_Height * 0.5f);
             viewportPos[k].z = clipPos[k].z;
         }
 

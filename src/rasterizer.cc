@@ -3,12 +3,12 @@
 
 namespace msr{
 
-void rasterizer::drawPixel(int x, int y, const vec4& color,framebuffer& fb){
+void rasterizer::drawPixel(float x, float y, const vec4& color,framebuffer& fb){
     fb.setPixelColor(x,y,color);
 }
 
 void rasterizer::drawPixel(fragmentdata& fg, shader& sh,framebuffer& fb){
-    vec4 color = sh.frag_texture(fg);
+    vec4 color = sh.frag_phong(fg);
     //std::cout<<"pixel: "<<fg.screenPos.x<<", "<<fg.screenPos.y<<", "<<"pixel color: "<<color.x<<", "<<color.y<<", "<<color.z<<std::endl;
     fb.setPixelColor(fg.screenPos.x,fg.screenPos.y,color);
 }
@@ -52,7 +52,6 @@ void rasterizer::drawLine(int x1, int y1, int x2, int y2, const vec4& color,fram
         }
     }
 }
-
 
 void rasterizer::drawTriangle(vec3 v1, vec3 v2, vec3 v3, const vec4& color,framebuffer& fb) {
 

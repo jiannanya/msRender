@@ -35,12 +35,10 @@ int main()
     phone_shader.setPerspective(cam.getProjectionMatrix());
     phone_shader.setDiffuseTexture(&tex);
 
-    msr::pointlight light1 = msr::pointlight(msr::vec3(0, 0, 20), msr::vec3(1,1,1), 500);
-    msr::pointlight light2 = msr::pointlight(msr::vec3(0, 20, 0), msr::vec3(1,1,1), 500);
-    msr::pointlight light3 = msr::pointlight(msr::vec3(20, 0, 0), msr::vec3(1,1,1), 500);
+    msr::pointlight light1 = msr::pointlight(msr::vec3(0, 20, 0), msr::vec3(1,1,1), 500);
+    msr::pointlight light2 = msr::pointlight(msr::vec3(20, 0, 0), msr::vec3(1,1,1), 500);
     phone_shader.pushLight(&light1);
     phone_shader.pushLight(&light2);
-    phone_shader.pushLight(&light3);
 
 
     msr::context ctx = msr::context();
@@ -57,13 +55,5 @@ int main()
     msr::renderer render(ctx);
     render.render();
 
-
-    //render.filpFrameBuffer();
-    //render.saveToBmp("out.bmp");
-
-// #if defined(WIN32) || defined(_WIN32)
-// 	system("mspaint out.bmp");
-// #endif
-//    std::cout<<"end main"<<std::endl;
     return 0;
 }
